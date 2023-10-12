@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 type Props = {};
@@ -15,6 +16,9 @@ const LoginForm = (props: Props) => {
           placeholder="Enter Password"
         />{" "}
         <button className="bg-blue-700 text-white px-4 py-2">Login</button>
+        <Link className="text-center  text-sm border border-white" href={""}>
+          Don&apos;t have an account <span className="underline">Register</span>
+        </Link>
       </div>
     </div>
   );
