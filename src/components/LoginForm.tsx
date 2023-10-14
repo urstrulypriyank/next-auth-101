@@ -2,6 +2,7 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 type Props = {};
 
 const LoginForm = (props: Props) => {
@@ -9,18 +10,35 @@ const LoginForm = (props: Props) => {
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  const handleClick = async () => {
-    const res = await fetch("/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+  const handleClick = async (e: Event) => {
+    // const res = await fetch("/api/login", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     email,
+    //     password,
+    //   }),
+    // });
+    // if (res.ok) router.push("/");
+
+    // login using next-router
+    e.preventDefault();
+    try {
+      const res = await signIn("credentials", {
         email,
         password,
-      }),
-    });
-    if (res.ok) router.push("/");
+        redirect: false,
+      });
+      if (res?.error) {
+        console.log("invalid credentails");
+        return;
+      }
+      router.replace("/");
+    } catch (error: any) {
+      console.log(error.message);
+    }
   };
   return (
     <div className="grid place-items-center h-screen bg-blue-400 ">
@@ -47,7 +65,7 @@ const LoginForm = (props: Props) => {
           Login
         </button>
         <Link
-          className="text-center  text-sm border border-white"
+          className="text-center text-sm border border-white"
           href={"/signin"}
         >
           Don&apos;t have an account <span className="underline">Register</span>
